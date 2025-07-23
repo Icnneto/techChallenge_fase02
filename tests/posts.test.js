@@ -45,20 +45,20 @@ describe('Posts API', () => {
         const response = await request(app)
             .put(`/posts/${newPost.id}`)
             .send({
-                title: 'Teste de atualização do post',
+                title: 'Atualização do post',
                 content: 'Conteúdo atualizado',
                 author: 'Jest Tester'
             });
 
         expect(response.statusCode).toBe(200);
-        expect(response.body.title).toBe('Teste de atualização do post');
+        expect(response.body.title).toBe('Atualização do post');
     });
 
     it('deve procurar por posts com base em palavras-chave', async () => {
-        const response = await request(app).get('/posts/search?q=Conteúdo');
+        const response = await request(app).get('/posts/search?q=Atualização');
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
-        expect(response.body[0].title).toContain('Conteúdo');
+        expect(response.body[0].title).toContain('Atualização');
     });
 
     it('deve deletar um post', async () => {
