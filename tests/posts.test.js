@@ -58,7 +58,7 @@ describe('Posts API', () => {
         const response = await request(app).get('/posts/search?q=Conteúdo');
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
-        expect(response.body[0].title).toContain('Updated');
+        expect(response.body[0].title).toContain('Conteúdo');
     });
 
     it('deve deletar um post', async () => {
