@@ -18,7 +18,7 @@ describe('Posts API', () => {
             .post('/posts')
             .send({
                 title: 'Teste para criação de post',
-                content: 'Conteúdo teste',
+                content: 'teste',
                 author: 'Jest Tester'
             });
 
@@ -55,7 +55,7 @@ describe('Posts API', () => {
     });
 
     it('deve procurar por posts com base em palavras-chave', async () => {
-        const response = await request(app).get('/posts/search?q=Updated');
+        const response = await request(app).get('/posts/search?q=Conteúdo');
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body[0].title).toContain('Updated');
