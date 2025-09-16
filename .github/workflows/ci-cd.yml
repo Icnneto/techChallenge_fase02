@@ -27,6 +27,7 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secret.SUPABASE_SERVICE_KEY }}
 
   # 2. Job de Build e Push: Constrói a imagem Docker e envia para o Docker Hub
   build-and-push:

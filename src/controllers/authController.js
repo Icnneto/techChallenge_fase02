@@ -1,5 +1,5 @@
 const { AuthWeakPasswordError } = require('@supabase/supabase-js');
-const supabse = require('../services/supabase');
+const supabase = require('../services/supabase');
 
 exports.signUp = async (req, res) => {
     const { name, email, password, isTeacher } = req.body;
@@ -8,12 +8,15 @@ exports.signUp = async (req, res) => {
         return res.status(400).json({ error: 'Nome, email e senha são exigidos' })
     };
 
-    const { data: signUpData, error: signUpError } = await supabse.auth.signUp({
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: email,
         password: password
     });
 
-    if (signUpError) return res.status(400).json({ error: signUpError.message });
+    if (signUpError) {
+        console.log(signUpError);
+        return res.status(400).json({ error: signUpError.message });
+    }
 
     const user = signUpData.user;
     if (!user) {
@@ -21,7 +24,7 @@ exports.signUp = async (req, res) => {
     };
 
     const { error: profileError } = await supabase.from('profiles').insert([
-        { id: user.id, name, is_teacher: !!isTeacher }
+        { id: user.id, name: name, is_teacher: !!isTeacher }
     ]);
 
     if (profileError) {
@@ -38,7 +41,7 @@ exports.login = async (req, res) => {
         return res.status(400).json({ error: "Email e senha são obrigatórios" })
     };
 
-    const { data, error } = await supabse.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password
     });

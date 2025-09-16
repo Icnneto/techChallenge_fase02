@@ -1,16 +1,40 @@
+require('dotenv').config();
 const request = require('supertest');
 const app = require('../src/app');
+const { createClient } = require('@supabase/supabase-js');
 const supabase = require('../src/services/supabase');
+
+const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 describe('Cria usuário e manipula posts', () => {
     let newPost;
     let authToken;
 
     afterAll(async () => {
-        const { data: posts } = await supabase.from('posts').select('id').ilike('title', 'Test Post %');
+        const { data: posts } = await supabase
+            .from('posts')
+            .select('id')
+            .ilike('title', 'Test Post %');
         if (posts && posts.length) {
             const ids = posts.map(p => p.id);
             await supabase.from('posts').delete().in('id', ids);
+        };
+
+        const { data: profiles } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('name', 'Israel'); // ou pelo email, se preferir
+
+        if (profiles && profiles.length) {
+            const ids = profiles.map(p => p.id);
+            await supabase.from('profiles').delete().in('id', ids);
+
+            // agora apaga o user na tabela auth.users
+            // ⚠️ só funciona com service_role key, não com anon
+            const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(ids[0]);
+            if (deleteUserError) {
+                console.error("Erro ao deletar usuário de teste:", deleteUserError.message);
+            }
         }
     });
 
@@ -19,8 +43,8 @@ describe('Cria usuário e manipula posts', () => {
             .post('/auth/signup')
             .send({
                 name: 'Israel',
-                email: 'israelnetonunes@gmail.com',
-                password: '@123',
+                email: 'israelteste@gmail.com',
+                password: '@123Teste',
                 isTeacher: true
             });
         expect(response.statusCode).toBe(201);
@@ -31,8 +55,8 @@ describe('Cria usuário e manipula posts', () => {
         const response = await request(app)
             .post('/auth/login')
             .send({
-                email: 'israelnetonunes@gmail.com',
-                password: '@123'
+                email: 'israelteste@gmail.com',
+                password: '@123Teste'
             });
 
         expect(response.statusCode).toBe(200);
@@ -95,7 +119,7 @@ describe('Cria usuário e manipula posts', () => {
         const response = await request(app)
             .delete(`/posts/${newPost.id}`)
             .set('Authorization', `Bearer ${authToken}`);
-            
+
         expect(response.statusCode).toBe(204);
 
         const getResponse = await request(app).get(`/posts/${newPost.id}`);
