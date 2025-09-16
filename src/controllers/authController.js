@@ -24,7 +24,7 @@ exports.signUp = async (req, res) => {
     };
 
     const { error: profileError } = await supabase.from('profiles').insert([
-        { id: user.id, name: name, is_teacher: isTeacher }
+        { id: user.id, name: name, is_teacher: !!isTeacher }
     ]);
 
     if (profileError) {
