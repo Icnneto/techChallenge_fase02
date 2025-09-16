@@ -52,6 +52,21 @@ exports.login = async (req, res) => {
 };
 
 exports.getMe = async (req, res) => {
-    const { user } = req;
-    res.status(200).json(user);
+    try {
+        const user = req.user;
+
+        const { data: profile, error } = await supabase
+            .from("profiles")
+            .select("id, name, is_teacher")
+            .eq("id", user.id)
+            .single();
+
+        if (error) {
+            return res.status(400).json({ error: "Erro ao buscar perfil" });
+        }
+
+        res.status(200).json(profile);
+    } catch (err) {
+        res.status(500).json({ error: "Erro interno do servidor" });
+    }
 };
