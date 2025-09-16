@@ -2,7 +2,7 @@ const { AuthWeakPasswordError } = require('@supabase/supabase-js');
 const supabase = require('../services/supabase');
 
 exports.signUp = async (req, res) => {
-    const { name, email, password, isTeacher } = req.body;
+    const { name, email, password, isProfessor } = req.body;
 
     if (!name || !email || !password) {
         return res.status(400).json({ error: 'Nome, email e senha são exigidos' })
@@ -24,7 +24,7 @@ exports.signUp = async (req, res) => {
     };
 
     const { error: profileError } = await supabase.from('profiles').insert([
-        { id: user.id, name: name, is_teacher: !!isTeacher }
+        { id: user.id, name: name, is_teacher: !!isProfessor }
     ]);
 
     if (profileError) {
