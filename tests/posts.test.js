@@ -45,7 +45,7 @@ describe('Cria usuário e manipula posts', () => {
                 name: 'Israel',
                 email: 'israelteste@gmail.com',
                 password: '@123Teste',
-                isTeacher: true
+                isProfessor: true
             });
         expect(response.statusCode).toBe(201);
         expect(response.body.message).toBe('Usuário criado com sucesso!');
