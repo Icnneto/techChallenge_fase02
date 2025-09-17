@@ -17,11 +17,11 @@ exports.getPostById = async (req, res) => {
 
 // POST /posts
 exports.createPost = async (req, res) => {
-    const { title, content, author } = req.body;
+    const { title, content, author, user_id } = req.body;
     if (!title || !author) {
         return res.status(400).json({ error: 'Title and author are required' });
     }
-    const { data, error } = await supabase.from('posts').insert([{ title, content, author }]).select().single();
+    const { data, error } = await supabase.from('posts').insert([{ title, content, author, user_id }]).select().single();
     if (error) return res.status(500).json({ error: error.message });
     res.status(201).json(data);
 };

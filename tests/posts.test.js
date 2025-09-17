@@ -72,7 +72,8 @@ describe('Cria usuário e manipula posts', () => {
             .send({
                 title: 'Teste para criação de post',
                 content: 'teste',
-                author: 'Jest Tester'
+                author: 'Jest Tester',
+                user_id: '7d80625a-0f28-4d88-8ea4-a23a69a20f77'
             });
 
         expect(response.statusCode).toBe(201);
